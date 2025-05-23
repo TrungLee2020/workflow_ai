@@ -1,0 +1,534 @@
+/* Người code: HIEPLD */
+
+/* Lưới nền khu vực luồng công việc */
+.workflow-area {
+    background-image: 
+        linear-gradient(rgba(129, 140, 248, 0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(129, 140, 248, 0.2) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-color: #f9fafb;
+}
+
+/* Định dạng node */
+.node {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    cursor: move;
+    position: absolute;
+    user-select: none;
+    border: 1px solid #d1d5db;
+    background: linear-gradient(145deg, #ffffff, #f3f4f6);
+    width: 320px;
+    pointer-events: auto;
+}
+
+.node:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.node.selected {
+    border: 2px solid #ff0072;
+    box-shadow: 0 0 0 6px rgba(255, 0, 114, 0.3);
+}
+
+/* Tiêu đề node */
+.node-header {
+    padding: 14px 18px;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    border-bottom: 1px solid #d1d5db;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+}
+
+.node-delete {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.node-delete:hover {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+/* Màu sắc tiêu đề */
+.node-trigger .node-header { background: linear-gradient(90deg, rgba(79, 70, 229, 0.2), rgba(255, 255, 255, 0.95)); }
+.node-http .node-header { background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), rgba(255, 255, 255, 0.95)); }
+.node-ai .node-header { background: linear-gradient(90deg, rgba(245, 158, 11, 0.2), rgba(255, 255, 255, 0.95)); }
+.node-output .node-header { background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(255, 255, 255, 0.95)); }
+.node-condition .node-header { background: linear-gradient(90deg, rgba(147, 51, 234, 0.2), rgba(255, 255, 255, 0.95)); }
+
+/* Thân node */
+.node-body {
+    padding: 18px;
+    font-size: 14px;
+    color: #374151;
+    text-align: center; /* Căn giữa văn bản */
+}
+
+/* Khu vực cấu hình */
+.node-config {
+    margin-bottom: 14px;
+}
+
+.node-config-tabs {
+    display: flex;
+    justify-content: center; /* Căn giữa các tab */
+    border-bottom: 2px solid #d1d5db;
+    margin-bottom: 16px;
+}
+
+.node-config-tab {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1; /* Chia đều không gian cho các tab */
+    text-align: center;
+    border-bottom: 2px solid transparent;
+}
+
+.node-config-tab.active {
+    color: #ff0072;
+    border-bottom: 2px solid #ff0072;
+    font-weight: 600;
+}
+
+.node-config-tab:hover {
+    color: #ff0072;
+    background: #f3f4f6;
+}
+
+.node-config-content {
+    display: none;
+}
+
+.node-config-content.active {
+    display: block;
+}
+
+.node-config-field {
+    margin-bottom: 12px;
+    text-align: left; /* Căn trái cho các trường nhập liệu */
+}
+
+.node-config-field label {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1f2937;
+    margin-bottom: 6px;
+}
+
+.node-config-field label span {
+    margin-left: 6px;
+    color: #6b7280;
+    font-size: 12px;
+    cursor: help;
+}
+
+.node-config-field input,
+.node-config-field select,
+.node-config-field textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1f2937;
+    background: #ffffff;
+    transition: all 0.2s;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.node-config-field input:focus,
+.node-config-field select:focus,
+.node-config-field textarea:focus {
+    outline: none;
+    border-color: #ff0072;
+    box-shadow: 0 0 0 4px rgba(255, 0, 114, 0.15);
+}
+
+.node-config-field textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.node-config-field select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em;
+    padding-right: 2rem;
+}
+
+/* Khu vực output */
+.node-output-area {
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 12px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #1f2937;
+    background: #f9fafb;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.node-output-area.draggable {
+    cursor: move;
+    background: #e5e7eb;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s;
+}
+
+.node-output-area.draggable:hover {
+    background: #d1d5db;
+    transform: scale(1.02);
+}
+
+.node-output-area.draggable .output-content {
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.node-output-area.draggable .output-drag-handle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ff0072;
+    cursor: grab;
+    flex-shrink: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Màu nền output */
+.node-trigger .node-output-area { background: #e0e7ff; }
+.node-http .node-output-area { background: #dbeafe; }
+.node-ai .node-output-area { background: #fef3c7; }
+.node-output .node-output-area { background: #d1fae5; }
+.node-condition .node-output-area { background: #f3e8ff; }
+
+/* Nút xem chi tiết */
+.node-output-details {
+    margin-top: 8px;
+    color: #ff0072;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: underline;
+    display: block;
+    text-align: right;
+    transition: color 0.2s;
+}
+
+.node-output-details:hover {
+    color: #e60066;
+}
+
+/* Định dạng Markdown */
+.node-output-area .markdown-content,
+#modal-output.markdown-content {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    line-height: 1.7;
+    color: #1f2937;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+    font-weight: 600;
+    margin-bottom: 0.6em;
+    color: #111827;
+}
+
+.markdown-content h1 { font-size: 1.3em; }
+.markdown-content h2 { font-size: 1.15em; }
+.markdown-content h3 { font-size: 1.05em; }
+
+.markdown-content p { margin-bottom: 0.6em; }
+
+.markdown-content ul,
+.markdown-content ol {
+    margin-bottom: 0.6em;
+    padding-left: 1.8em;
+}
+
+.markdown-content li { margin-bottom: 0.3em; }
+
+.markdown-content code {
+    background: #e5e7eb;
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95em;
+}
+
+.markdown-content pre {
+    background: #e5e7eb;
+    padding: 0.6em;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.95em;
+    margin-bottom: 0.6em;
+}
+
+.markdown-content a {
+    color: #ff0072;
+    text-decoration: underline;
+}
+
+.markdown-content a:hover {
+    color: #e60066;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid #d1d5db;
+    padding-left: 0.6em;
+    color: #6b7280;
+    margin-bottom: 0.6em;
+}
+
+/* Điểm điều khiển kết nối */
+.connection-handle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    z-index: 10;
+}
+
+.connection-handle:hover {
+    transform: scale(1.6);
+}
+
+.connection-handle.valid-target {
+    transform: scale(1.6);
+    box-shadow: 0 0 0 5px rgba(255, 0, 114, 0.35);
+}
+
+/* Hiệu ứng loading */
+.node.loading .connection-handle {
+    animation: pulseHandle 1s ease-in-out infinite;
+}
+
+@keyframes pulseHandle {
+    0% { transform: scale(1); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); }
+    50% { transform: scale(1.4); box-shadow: 0 0 10px 4px rgba(255, 165, 0, 0.5); }
+    100% { transform: scale(1); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); }
+}
+
+/* Màu sắc điểm điều khiển */
+.connection-handle.trigger { background: #4f46e5; }
+.connection-handle.http { background: #3b82f6; }
+.connection-handle.ai { background: #f59e0b; }
+.connection-handle.output { background: #10b981; }
+.connection-handle.condition { background: #9333ea; }
+
+/* Vị trí điểm điều khiển */
+.connection-handle.input { left: -8px; top: 50%; transform: translateY(-50%); }
+.connection-handle.output { right: -8px; top: 50%; transform: translateY(-50%); }
+.connection-handle.output[data-branch="true"] { right: -8px; top: 40%; transform: translateY(-40%); }
+.connection-handle.output[data-branch="false"] { right: -8px; top: 60%; transform: translateY(-60%); }
+
+/* Đường kết nối */
+.connection-path {
+    stroke-width: 2.5;
+    fill: none;
+    transition: stroke-width 0.3s ease, opacity 0.3s ease;
+    stroke-linecap: round;
+    pointer-events: stroke;
+    opacity: 0;
+    animation: fadeIn 0.4s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.connection-path:hover {
+    stroke-width: 3.5;
+}
+
+.connection-path.selected {
+    stroke-width: 3.5;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { stroke-opacity: 1; }
+    50% { stroke-opacity: 0.65; }
+    100% { stroke-opacity: 1; }
+}
+
+/* Hiệu ứng loading đường kết nối */
+.connection-path.loading-incoming {
+    stroke-dasharray: 12, 6;
+    animation: dashMove 0.5s linear infinite;
+}
+
+@keyframes dashMove {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -18; }
+}
+
+/* Nhãn kết nối */
+.connection-label {
+    font-size: 11px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 5px 10px;
+    border-radius: 14px;
+    border: 1px solid #d1d5db;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+    user-select: none;
+    transition: all 0.3s ease;
+    position: absolute;
+    z-index: 20;
+}
+
+.connection-label:hover {
+    transform: scale(1.15);
+}
+
+/* Thanh cuộn */
+#node-palette, #template-palette {
+    scrollbar-width: thin;
+    scrollbar-color: #ff0072 #f9fafb;
+}
+
+#node-palette::-webkit-scrollbar, #template-palette::-webkit-scrollbar {
+    width: 12px;
+}
+
+#node-palette::-webkit-scrollbar-track, #template-palette::-webkit-scrollbar-track {
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+#node-palette::-webkit-scrollbar-thumb, #template-palette::-webkit-scrollbar-thumb {
+    background-color: #ff0072;
+    border-radius: 8px;
+}
+
+/* Vùng chứa handle */
+.connection-handles {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 14px;
+}
+
+/* Node preview */
+.node-preview {
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 40;
+    position: absolute;
+    background: #ffffff;
+    border: 2px dashed #ff0072;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    width: 320px;
+    padding: 14px;
+    font-size: 16px;
+    color: #374151;
+}
+
+/* Modal output */
+#output-modal {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+#output-modal:not(.hidden) {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Output handle */
+.output-handle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    bottom: -8px;
+    right: 50%;
+    transform: translateX(50%);
+    background: #10b981;
+    z-index: 10;
+}
+
+.output-handle:hover {
+    transform: translateX(50%) scale(1.6);
+}
+
+/* Template item */
+.template-item {
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.template-item:hover {
+    background: #e0e7ff;
+    border-color: #ff0072;
+    transform: scale(1.02);
+}
+
+.template-item.selected {
+    border: 2px solid #ff0072;
+    background: #e0e7ff;
+}
+
+.template-item h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 6px;
+}
+
+.template-item p {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+/* Node item trong palette */
+.node-item {
+    cursor: move;
+    user-select: none;
+    pointer-events: auto;
+}
