@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Hard code API key ở đây
-OPENWEATHER_API_KEY = "3b1e8652b8f77af6a51ffeef4fcc52f0"  
+OPENWEATHER_API_KEY = ""  
 
 @app.route('/weather', methods=['GET'])
 def get_weather():
